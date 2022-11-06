@@ -22,6 +22,9 @@ export default function Card({
   function replaceWithBr(string) {
     return string.replace(/\\n/g, " <br /> ");
   }
+  // get the date wiithout the day of the week
+  const formattedDate = date && new Date(date).toDateString();
+  const dateWithoutDay = formattedDate.split(" ").slice(1).join(" ");
 
   return (
     <div className={styles.card}>
@@ -32,7 +35,7 @@ export default function Card({
         <div className={styles.header}>
           <p className={styles.name}>{name}</p>
           <p className={styles.username}>{username}</p>
-          <p className={styles.date}>• {date}</p>
+          <p className={styles.date}>• {dateWithoutDay}</p>
         </div>
         <p
           className={styles.text}
