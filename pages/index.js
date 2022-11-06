@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useAccount } from "wagmi";
-import { useProfile } from "@memester-xyz/lens-use";
 import Intro from "../components/Intro";
 import styles from "../styles/Home.module.scss";
 import Welcome from "../components/Welcome";
 
 export default function Home() {
-  const { data } = useProfile("stani.lens");
   const { isConnected } = useAccount();
-  console.log("✨  ", data);
   const session = useSession();
   const [connect, setConnect] = useState();
 

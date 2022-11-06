@@ -2,6 +2,36 @@ import React, { useEffect, useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import swr from "swr";
 import Card from "./Card";
+import { Web3Storage } from "web3.storage";
+import { useLens } from "../hooks/useLens";
+
+const formatCIDLink = (cid: string, file: string) => {
+  return `ipfs://${cid}/${file}`;
+};
+
+function makeStorageClient() {
+  return new Web3Storage({
+    token:
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGQ0M0UzNTU4NDNBMjhlYzUyNTM1OTQ2Mjc3QmIzRUVlMTRGYzI4NTMiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2Njc3MTkyNDMxMjksIm5hbWUiOiJmcmFnbWVudG8ifQ.gR-2zyiWiflMeOI5zsDUDEgJtwScqms5N8vMQU9TvJM",
+  });
+}
+
+function makeFileObjects(tweet: any) {
+  const blob = new Blob([JSON.stringify(tweet)], { type: "application/json" });
+
+  const files = [
+    new File(["contents-of-file-1"], "plain-utf8.txt"),
+    new File([blob], `tweet_${tweet.id}.json`),
+  ];
+  return files;
+}
+
+async function storeFiles(files) {
+  const client = makeStorageClient();
+  const cid = await client.put(files);
+  console.log("stored files with cid:", cid);
+  return cid;
+}
 
 const fetchTweets = (userId) =>
   swr(
@@ -20,10 +50,9 @@ export default function Tweets() {
   } = session.data?.user || {};
 
   const { data, error, isValidating } = fetchTweets(userId);
+  const { setFileCID } = useLens();
 
   const [tweets, setTweets] = useState([]);
-
-  console.log({ data, error });
 
   useEffect(() => {
     if (data?.length) {
@@ -45,15 +74,24 @@ export default function Tweets() {
       {!data && isValidating && <div>Loading...</div>}
 
       {tweets.map((tweet) => (
-        <Card
-          date={tweet.created_at}
+        <span
           key={tweet.id}
-          name={name}
-          username={username}
-          avatarURL={image}
-          text={tweet.text}
-          metrics={tweet.public_metrics}
-        />
+          onClick={async () => {
+            const cid = await storeFiles(makeFileObjects(tweet));
+            console.log(cid);
+            setFileCID(formatCIDLink(cid, `tweet_${tweet.id}.json`));
+          }}
+        >
+          <Card
+            date={tweet.created_at}
+            // key={tweet.id}
+            name={name}
+            username={username}
+            avatarURL={image}
+            text={tweet.text}
+            metrics={tweet.public_metrics}
+          />
+        </span>
       ))}
     </>
   );
