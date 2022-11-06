@@ -1,9 +1,11 @@
-import styles from "../styles/Home.module.css";
-import { useProfile } from "@memester-xyz/lens-use";
-import { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import swr from "swr";
-// import Tweets from "./api/user-tweets";
+import { useAccount } from "wagmi";
+import { useProfile } from "@memester-xyz/lens-use";
+import Intro from "../components/Intro";
+import styles from "../styles/Home.module.scss";
+import Welcome from "../components/Welcome";
 
 const fetchTweets = (userId) => swr(userId, () => fetch(`/api/user-tweets/${userId}`).then(res => res.json()), { revalidateOnFocus: true })
 
@@ -32,21 +34,34 @@ const Tweets = ({ userId = undefined }) => {
 
 export default function Home() {
   const { data } = useProfile("stani.lens");
-  // console.log("✨  ", data);
-
+  const { isConnected } = useAccount();
+  console.log("✨  ", data);
   const session = useSession();
+  const [connect, setConnect] = useState();
 
-  console.log({ session })
+  useEffect(() => {
+    setConnect(isConnected);
+  }, [isConnected]);
 
-  return <div className={styles.container}>
-    {!session.data && <>
-  Not signed in <br/>
-  <button onClick={() => signIn()}>Sign in</button>
-</>}
-{session.data && <>
-  Signed in as {session.data?.user?.name} <br/>
-  <button onClick={() => signOut()}>Sign out</button>
-</>}
-  {session.data?.user?.name && <Tweets userId={session.data?.user?.id} />}
-  </div>;
+  return (
+    <div>
+      {!connect && <Intro />}
+      {connect && <Welcome />}
+      <div className={styles.container}>
+        {!session.data && (
+          <>
+            Not signed in <br />
+            <button onClick={() => signIn()}>Sign in</button>
+          </>
+        )}
+        {session.data && (
+          <>
+            Signed in as {session.data?.user?.name} <br />
+            <button onClick={() => signOut()}>Sign out</button>
+          </>
+        )}
+      </div>
+      {session.data?.user?.name && <Tweets userId={session.data?.user?.id} />}
+    </div>
+  );
 }

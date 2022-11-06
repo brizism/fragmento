@@ -1,0 +1,50 @@
+.card {
+  width: 500px;
+  height: auto;
+  background-color: #fff;
+  border-radius: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 2rem;
+  box-shadow: rgb(151 134 245 / 20%) 0px 6px 20px 4px;
+
+  .avatar {
+    img {
+      vertical-align: middle;
+      border-radius: 50%;
+    }
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    .header {
+      display: flex;
+      gap: 0.25rem;
+      align-items: center;
+
+      .name {
+        font-family: "gorditamedium";
+      }
+
+      .username {
+        color: #8395a7;
+      }
+
+      .date {
+        font-size: 0.75rem;
+      }
+    }
+
+    .text {
+    }
+
+    img {
+      border-radius: 1rem;
+    }
+  }
+}

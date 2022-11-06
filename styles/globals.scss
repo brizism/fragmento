@@ -1,0 +1,60 @@
+@import "./normalize.scss";
+
+@font-face {
+  font-family: "gorditabold";
+  src: url("../fonts/gordita-bold-webfont.woff2") format("woff2"),
+    url("../fonts/gordita-bold-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "gorditabold_italic";
+  src: url("../fonts/gordita-bolditalic-webfont.woff2") format("woff2"),
+    url("../fonts/gordita-bolditalic-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "gorditamedium";
+  src: url("../fonts/gordita-medium-webfont.woff2") format("woff2"),
+    url("../fonts/gordita-medium-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "gorditamedium_italic";
+  src: url("../fonts/gordita-mediumitalic-webfont.woff2") format("woff2"),
+    url("../fonts/gordita-mediumitalic-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "gorditaregular";
+  src: url("../fonts/gordita-regular-webfont.woff2") format("woff2"),
+    url("../fonts/gordita-regular-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "gorditaitalic";
+  src: url("../fonts/gordita-regularitalic-webfont.woff2") format("woff2"),
+    url("../fonts/gordita-regularitalic-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+p,
+h1,
+h2 {
+  margin: 0;
+}
+
+body {
+  // background-color: gold;
+  font-family: "gorditaregular";
+}

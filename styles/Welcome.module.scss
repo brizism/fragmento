@@ -1,0 +1,23 @@
+.welcome {
+  width: 100%;
+  position: relative;
+
+  .disconnect {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-right: 2rem;
+  }
+
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+}
+
+.cardContainer {
+  display: flex;
+  gap: 2rem;
+}

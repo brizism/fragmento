@@ -1,4 +1,4 @@
-import "../styles/globals.css";
+import "../styles/globals.scss";
 
 import { WagmiConfig, createClient } from "wagmi";
 import { getDefaultProvider } from "ethers";
