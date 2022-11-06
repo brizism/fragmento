@@ -29,11 +29,11 @@ export default function Tweets() {
     if (data?.length) {
       setTweets(
         data.filter((tweet) => {
-          const isReply = tweet.in_reply_to_status_id !== undefined;
-          const isReplyToSelf = tweet.in_reply_to_user_id === userId;
+          const isReply = tweet.in_reply_to_user_id !== undefined;
+          const isReplyToSelf = tweet.in_reply_to_user_id === tweet.author_id;
           const isRT = tweet.text.split(/RT/)[0] === "";
-          // filter out retweets and non-self replies
-          return !isReply && !isRT && !isReplyToSelf;
+
+          return isReplyToSelf || (!isReply && !isRT);
         })
       );
     }
