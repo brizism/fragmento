@@ -9,6 +9,12 @@ type CardProps = {
   date: string;
   text: string;
   image?: string;
+  metrics?: {
+    retweet_count: number;
+    reply_count: number;
+    like_count: number;
+    quote_count: number;
+  };
 };
 
 export default function Card({
@@ -18,6 +24,7 @@ export default function Card({
   date,
   text,
   image,
+  metrics,
 }: CardProps): JSX.Element {
   function replaceWithBr(string) {
     return string.replace(/\\n/g, " <br /> ");
@@ -25,6 +32,9 @@ export default function Card({
   // get the date wiithout the day of the week
   const formattedDate = date && new Date(date).toDateString();
   const dateWithoutDay = formattedDate.split(" ").slice(1).join(" ");
+
+  const { retweet_count, reply_count, like_count, quote_count } = metrics || {};
+  const retweetCount = retweet_count + quote_count;
 
   return (
     <div className={styles.card}>
@@ -46,15 +56,16 @@ export default function Card({
         ) : null}
         <div className={styles.footer}>
           <div className={styles.comments}>
-            <Image src="/comment.png" alt="comment" width={20} height={20} />2
+            <Image src="/comment.png" alt="comment" width={20} height={20} />
+            {reply_count}
           </div>
           <div className={styles.retweets}>
             <Image src="/retweet.png" alt="comment" width={20} height={20} />
-            45
+            {retweetCount}
           </div>
           <div className={styles.likes}>
             <Image src="/heart.png" alt="comment" width={20} height={20} />
-            234
+            {like_count}
           </div>
         </div>
       </div>

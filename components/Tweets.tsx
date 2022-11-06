@@ -52,6 +52,7 @@ export default function Tweets() {
           username={username}
           avatarURL={image}
           text={tweet.text}
+          metrics={tweet.public_metrics}
         />
       ))}
     </>

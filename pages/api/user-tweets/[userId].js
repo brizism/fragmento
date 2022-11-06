@@ -6,7 +6,7 @@ const headers = {
 };
 
 const baseURL = (userId) =>
-  `https://api.twitter.com/2/users/${userId}/tweets?max_results=100&tweet.fields=author_id,conversation_id,created_at,id,in_reply_to_user_id,lang,possibly_sensitive,source,text&media.fields=alt_text,height,preview_image_url,url,width`;
+  `https://api.twitter.com/2/users/${userId}/tweets?max_results=100&tweet.fields=author_id,conversation_id,created_at,id,in_reply_to_user_id,public_metrics,entities,lang,possibly_sensitive,source,text&media.fields=alt_text,height,preview_image_url,url`;
 
 async function main(userId = "127933832") {
   const data = await (await axios.get(baseURL(userId), { headers })).data;
