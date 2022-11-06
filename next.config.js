@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ["t4.ftcdn.net"],
+    domains: ["t4.ftcdn.net", "pbs.twimg.com"],
     remotePatterns: [
       {
         protocol: "ipfs",

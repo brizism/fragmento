@@ -19,6 +19,10 @@ export default function Card({
   text,
   image,
 }: CardProps): JSX.Element {
+  function replaceWithBr(string) {
+    return string.replace(/\\n/g, " <br /> ");
+  }
+
   return (
     <div className={styles.card}>
       <div className={styles.avatar}>
@@ -30,7 +34,10 @@ export default function Card({
           <p className={styles.username}>{username}</p>
           <p className={styles.date}>• {date}</p>
         </div>
-        <div className={styles.text}>{text}</div>
+        <p
+          className={styles.text}
+          dangerouslySetInnerHTML={{ __html: replaceWithBr(text) }}
+        />
         {image ? (
           <Image src={image} alt="tweet image" width={400} height={400} />
         ) : null}

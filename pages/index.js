@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import swr from "swr";
 import { useAccount } from "wagmi";
@@ -6,31 +6,45 @@ import { useProfile } from "@memester-xyz/lens-use";
 import Intro from "../components/Intro";
 import styles from "../styles/Home.module.scss";
 import Welcome from "../components/Welcome";
+import Card from "../components/Card";
 
-const fetchTweets = (userId) => swr(userId, () => fetch(`/api/user-tweets/${userId}`).then(res => res.json()), { revalidateOnFocus: true })
+const fetchTweets = (userId) =>
+  swr(
+    userId,
+    () => fetch(`/api/user-tweets/${userId}`).then((res) => res.json()),
+    { revalidateOnFocus: true }
+  );
 
-const Tweets = ({ userId = undefined }) => {
+const Tweets = ({ name, username, image, userId }) => {
   const { data, error, isValidating } = fetchTweets(userId);
 
   const [tweets, setTweets] = useState([]);
 
-  console.log({ data, error })
+  console.log({ data, error });
 
   useEffect(() => {
     if (data?.length) {
       setTweets(data);
     }
-  }, [data])
+  }, [data]);
   return (
     <div>
       {error && <div>Failed to load</div>}
 
       {!data && isValidating && <div>Loading...</div>}
 
-      {tweets.map((tweet) => <div key={tweet.id}>{tweet.text}</div>)}
+      {tweets.map((tweet) => (
+        <Card
+          key={tweet.id}
+          name={name}
+          username={username}
+          avatarURL={image}
+          text={tweet.text}
+        />
+      ))}
     </div>
-  )
-}
+  );
+};
 
 export default function Home() {
   const { data } = useProfile("stani.lens");
@@ -38,6 +52,8 @@ export default function Home() {
   console.log("✨  ", data);
   const session = useSession();
   const [connect, setConnect] = useState();
+
+  console.log({ session });
 
   useEffect(() => {
     setConnect(isConnected);
@@ -61,7 +77,14 @@ export default function Home() {
           </>
         )}
       </div>
-      {session.data?.user?.name && <Tweets userId={session.data?.user?.id} />}
+      {session.data?.user?.name && (
+        <Tweets
+          username={session.data?.user?.username}
+          image={session.data?.user?.profile_image_url}
+          name={session.data?.user?.name}
+          userId={session.data?.user?.id}
+        />
+      )}
     </div>
   );
 }

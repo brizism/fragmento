@@ -28,17 +28,7 @@ export default function Welcome() {
             name="brizism"
             username="@brizism"
             date="Oct 27"
-            text="Let’s play a game!
-
-            Give me one word!
-            
-            Let’s make a community piece.
-            
-            I will take your one word and put it into a story and create an image to represent it.
-            
-            All words count until midnight.  
-            
-            Retweet so we can add more words!"
+            text="🎟️🎟️🎟️\nRolling out community based invites for ORB! \n\nComment if you are active ORB user and want to bring your other Lens frens here. Will credit a few invites to all the interesting people!\n🎟️🎟️🎟️"
           />
         </div>
       </div>
