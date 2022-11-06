@@ -1,3 +1,5 @@
+@import "./colors.module.scss";
+
 .card {
   width: 500px;
   height: auto;
@@ -19,7 +21,8 @@
   .content {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1rem;
+    width: 100%;
 
     .header {
       display: flex;
@@ -31,11 +34,12 @@
       }
 
       .username {
-        color: #8395a7;
+        color: $stormpetrel;
       }
 
       .date {
         font-size: 0.75rem;
+        color: $fueltown;
       }
     }
 
@@ -44,6 +48,22 @@
 
     img {
       border-radius: 1rem;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: $fueltown;
+
+      .comments,
+      .retweets,
+      .likes {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.25rem;
+      }
     }
   }
 }

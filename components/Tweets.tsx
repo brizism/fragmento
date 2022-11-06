@@ -39,7 +39,7 @@ export default function Tweets() {
     }
   }, [data]);
   return (
-    <div>
+    <>
       {error && <div>Failed to load</div>}
 
       {!data && isValidating && <div>Loading...</div>}
@@ -54,6 +54,6 @@ export default function Tweets() {
           text={tweet.text}
         />
       ))}
-    </div>
+    </>
   );
 }

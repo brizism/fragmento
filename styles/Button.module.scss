@@ -4,4 +4,10 @@
   padding: 1rem 2rem;
   border-radius: 5rem;
   margin: 2rem 0;
+  cursor: pointer;
+
+  &:hover {
+    background-color: black;
+    color: white;
+  }
 }
