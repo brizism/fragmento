@@ -28,10 +28,13 @@ export default function Tweets() {
   useEffect(() => {
     if (data?.length) {
       setTweets(
-        data.filter(
-          (tweet) =>
-            !tweet.in_reply_to_user_id && tweet.text.split(/RT/)[0] !== ""
-        )
+        data.filter((tweet) => {
+          const isReply = tweet.in_reply_to_status_id !== undefined;
+          const isReplyToSelf = tweet.in_reply_to_user_id === userId;
+          const isRT = tweet.text.split(/RT/)[0] === "";
+          // filter out retweets and non-self replies
+          return !isReply && !isRT && !isReplyToSelf;
+        })
       );
     }
   }, [data]);
