@@ -19,6 +19,10 @@ export default NextAuth({
       return token
     },
     session: async ({ session, token }) => {
+      console.log({
+        session,
+        token
+      })
       return {
         ...session,
         user: token.profile
