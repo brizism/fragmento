@@ -15,12 +15,26 @@ const httpLink = createHttpLink({
 const authLink = setContext((_, { headers }) => {
   // get the authentication token from local storage if it exists
   const token = localStorage.getItem('lens')
-  const { expires, access } = JSON.parse(token) || {};
+  const { access, expires } = JSON.parse(token) || {};
   // return the headers to the context so httpLink can read them
+
+  // has 30 mins passed since the token was issued?
+  const isExpired = expires && (Date.now() / 1000) - Number(expires) > 1800;
+
+  console.log('isExpired', isExpired);
+
+  if (access?.authenticate?.accessToken) {
+    return {
+      headers: {
+        ...headers,
+        'x-access-token': access.authenticate.accessToken,
+      }
+    }
+  }
+
   return {
     headers: {
       ...headers,
-      'x-access-token': access?.authenticate?.accessToken,
     }
   }
 });

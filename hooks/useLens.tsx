@@ -6,6 +6,7 @@ import {
   usePost,
 } from "@memester-xyz/lens-use";
 import { useAccount, useSignMessage } from "wagmi";
+import { DefaultProfile } from "@memester-xyz/lens-use/dist/types/lens";
 
 const useInterval = (callback, delay) => {
   const savedCallback = useMemo(() => callback, [callback]);
@@ -41,12 +42,14 @@ const useIsTokenValid = () => {
 export const LensContext = React.createContext<{
   isTokenValid: boolean;
   login: () => void;
+  profile: DefaultProfile;
   // state
   setFileCID: React.Dispatch<React.SetStateAction<string>>;
 }>({
   isTokenValid: false,
   login: () => {},
   setFileCID: () => {},
+  profile: {} as DefaultProfile,
 });
 LensContext.displayName = "LensContext";
 
@@ -69,7 +72,15 @@ export const LensProvider: React.FC<{ children: React.ReactNode }> = ({
   const { defaultProfile } = useDefaultProfile(address) || {};
   const { post, error, loading, publicationId } = usePost(
     defaultProfile?.id,
-    fileCID
+    fileCID,
+    {
+      onBroadcasted: (receipt) => {
+        console.log("onBroadcasted", receipt);
+      },
+      onCompleted(receipt) {
+        console.log("onCompleted", receipt);
+      },
+    }
   );
   const [authenticate, { data: authenticateData }] = useAuthenticate(
     address,
@@ -81,29 +92,31 @@ export const LensProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     if (fileCID) {
-      post();
+      console.log( post())
+      // clear localstorage
+      // localStorage.removeItem("lens");
     }
-  }, [fileCID]);
+  }, [fileCID, post]);
 
   console.log("first ✨", {
     error,
     loading,
     publicationId,
+    defaultProfile
   });
 
   useEffect(() => {
     checkIfExpired();
-  }, []);
+  }, [checkIfExpired]);
 
   useEffect(() => {
     if (signedData) {
       authenticate();
     }
-  }, [signedData]);
+  }, [authenticate, signedData]);
 
   useEffect(() => {
     if (authenticateData?.authenticate?.accessToken) {
-      console.log(authenticateData);
       // save authenticateData to local storage for 30 mins
       localStorage.setItem(
         "lens",
@@ -114,7 +127,7 @@ export const LensProvider: React.FC<{ children: React.ReactNode }> = ({
       );
       checkIfExpired();
     }
-  }, [authenticateData]);
+  }, [authenticateData, checkIfExpired]);
 
   useInterval(checkIfExpired, 10000);
 
@@ -122,13 +135,17 @@ export const LensProvider: React.FC<{ children: React.ReactNode }> = ({
   const value = useMemo(
     () => ({
       isTokenValid: isValid,
-      login: async () =>
-        await signMessageAsync({
-          message: challengeData?.challenge.text,
-        }),
+      login: async () => {
+        if (challengeData?.challenge?.text) {
+          await signMessageAsync({
+            message: challengeData?.challenge.text,
+          });
+        }
+      },
       setFileCID,
+      profile: defaultProfile,
     }),
-    [isValid, challengeData]
+    [isValid, defaultProfile, signMessageAsync, challengeData?.challenge.text]
   );
 
   return <LensContext.Provider value={value}>{children}</LensContext.Provider>;

@@ -4,6 +4,7 @@ import swr from "swr";
 import Card from "./Card";
 import { Web3Storage } from "web3.storage";
 import { useLens } from "../hooks/useLens";
+import { DefaultProfile } from "@memester-xyz/lens-use/dist/types/lens";
 
 const formatCIDLink = (cid: string, file: string) => {
   return `ipfs://${cid}/${file}`;
@@ -16,14 +17,35 @@ function makeStorageClient() {
   });
 }
 
-function makeFileObjects(tweet: any) {
-  const blob = new Blob([JSON.stringify(tweet)], { type: "application/json" });
+function packageData(tweet: any, username: string, profile: DefaultProfile) {
+  const data = {
+    version: "2.0.0",
+    metadata_id: tweet.id,
+    description: `Archived Tweet by @${username}`,
+    content: tweet.text,
+    locale: tweet.lang,
+    contentWarning: tweet.possibly_sensitive ? "SENSITIVE " : null,
+    mainContentFocus: "TEXT_ONLY",
+    name: `Post by @${profile.handle}`,
+    tags: [],
+    attributes: [
+      {
+        traitType: "type",
+        displayType: "string",
+        value: "text_only",
+      },
+    ],
+    appId: "Lenster",
+  }
 
-  const files = [
-    new File(["contents-of-file-1"], "plain-utf8.txt"),
-    new File([blob], `tweet_${tweet.id}.json`),
-  ];
-  return files;
+  // prepare for lenster
+  const dataString = JSON.stringify(data);
+  const dataBlob = new Blob([dataString], { type: "application/text" });
+  const dataFile = new File([dataBlob], tweet.id, {
+    type: "application/text",
+  });
+
+  return [dataFile];
 }
 
 async function storeFiles(files) {
@@ -50,7 +72,7 @@ export default function Tweets() {
   } = session.data?.user || {};
 
   const { data, error, isValidating } = fetchTweets(userId);
-  const { setFileCID } = useLens();
+  const { setFileCID, profile } = useLens();
 
   const [tweets, setTweets] = useState([]);
 
@@ -77,9 +99,9 @@ export default function Tweets() {
         <span
           key={tweet.id}
           onClick={async () => {
-            const cid = await storeFiles(makeFileObjects(tweet));
+            const cid = await storeFiles(packageData(tweet, username, profile));
             console.log(cid);
-            setFileCID(formatCIDLink(cid, `tweet_${tweet.id}.json`));
+            setFileCID(formatCIDLink(cid, tweet.id));
           }}
         >
           <Card
